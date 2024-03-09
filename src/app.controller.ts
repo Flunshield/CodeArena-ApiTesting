@@ -24,7 +24,11 @@ export class AppController {
     let success = false;
     const testPassed: string[] = [];
     const testFailed: string[] = [];
+
     try {
+      if (!data.code) {
+        return returnFullFailled(data.tests);
+      }
       // Exécuter le code JavaScript dans un contexte sécurisé
       const sandbox = {};
       runInNewContext(data.code, sandbox);
@@ -48,10 +52,15 @@ export class AppController {
 
       return { success, testPassed, testFailed };
     } catch (error) {
-      for (let i = 0; i < data.tests.length; i++) {
-        testFailed.push(`${data.tests[i].name}`);
-      }
-      return { success: success, testPassed: [], testFailed: testFailed };
+      return returnFullFailled(data.tests);
     }
   }
+}
+
+function returnFullFailled(tests: Test[]) {
+  const testFailed = [];
+  for (let i = 0; i < tests.length; i++) {
+    testFailed.push(`${tests[i].name}`);
+  }
+  return { success: false, testPassed: [], testFailed: testFailed };
 }
