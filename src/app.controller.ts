@@ -1,10 +1,4 @@
-import {
-  Controller,
-  Post,
-  Body,
-  HttpException,
-  HttpStatus,
-} from '@nestjs/common';
+import { Controller, Post, Body } from '@nestjs/common';
 import { runInNewContext } from 'vm';
 import { AppService } from './app.service';
 
@@ -26,11 +20,11 @@ export class AppController {
     testPassed: string[];
     testFailed: string[];
   }> {
+    const tests = data.tests;
+    let success = false;
+    const testPassed: string[] = [];
+    const testFailed: string[] = [];
     try {
-      const tests = data.tests;
-      const testPassed: string[] = [];
-      const testFailed: string[] = [];
-      let success = false;
       // Exécuter le code JavaScript dans un contexte sécurisé
       const sandbox = {};
       runInNewContext(data.code, sandbox);
@@ -54,11 +48,10 @@ export class AppController {
 
       return { success, testPassed, testFailed };
     } catch (error) {
-      // Gérer les erreurs éventuelles
-      throw new HttpException(
-        "Une erreur est survenue lors de l'exécution des tests",
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
+      for (let i = 0; i < data.tests.length; i++) {
+        testFailed.push(`${data.tests[i].name}`);
+      }
+      return { success: success, testPassed: [], testFailed: testFailed };
     }
   }
 }
