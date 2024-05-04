@@ -39,10 +39,11 @@ export class AppController {
           tests[i].condition,
           sandbox,
         );
-        if (testResult) {
+
+        if (testResult === true) {
           testPassed.push(tests[i].name);
-        } else if (!testResult) {
-          testFailed.push(`${tests[i].name}: ${testResult}`);
+        } else {
+          testFailed.push(`${tests[i].name} : ${testResult}`);
         }
       }
 
