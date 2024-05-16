@@ -6,3 +6,14 @@ services:
     container_name: testingJs
     ports:
       - '3001:3001'
+    environment:
+      - VITE_API_BASE_URL_TEST=${VITE_API_BASE_URL_TEST}
+      - VITE_API_BASE_URL_BACK=${VITE_API_BASE_URL_BACK}
+      - LETSENCRYPT_HOST=${LETSENCRYPT_HOST}
+      - LETSENCRYPT_EMAIL=${LETSENCRYPT_EMAIL}
+      - VIRTUAL_HOST=${VIRTUAL_HOST}
+
+networks:
+  default:
+      name: nginx-proxy
+      external: true
