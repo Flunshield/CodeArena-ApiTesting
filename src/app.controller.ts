@@ -12,9 +12,9 @@ interface Data {
   tests: Test[];
 }
 
-@Controller('testsJs')
+@Controller('tests')
 export class AppController {
-  @Post()
+  @Post('/js')
   async runTests(@Body() data: Data): Promise<{
     success: boolean;
     testPassed: string[];

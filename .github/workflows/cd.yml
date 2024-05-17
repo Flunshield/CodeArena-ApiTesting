@@ -1,0 +1,27 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - '*'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - uses: actions/checkout@v2
+      - name: Déploiement sur le VPS
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          port: ${{ secrets.PORT }}
+          script: |
+            cd front-app/
+            docker compose down
+            git pull
+            docker compose up --build -d
