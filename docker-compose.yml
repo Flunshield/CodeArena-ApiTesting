@@ -4,3 +4,12 @@ services:
     container_name: testingJs
     ports:
       - '3001:3000'
+    environment:
+      - LETSENCRYPT_HOST=${LETSENCRYPT_HOST}
+      - LETSENCRYPT_EMAIL=${LETSENCRYPT_EMAIL}
+      - VIRTUAL_HOST=${VIRTUAL_HOST}
+
+networks:
+  default:
+      name: nginx-proxy
+      external: true
