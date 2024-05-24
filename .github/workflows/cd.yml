@@ -29,6 +29,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
         run: |
+          git add .
+          git commit -m "chore(release): $(git describe --tags --abbrev=0)"
           git push --follow-tags origin main
   deploy:
     runs-on: ubuntu-latest
