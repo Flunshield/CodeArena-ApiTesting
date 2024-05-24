@@ -13,23 +13,15 @@ jobs:
     if: github.ref == 'refs/heads/main'
     steps:
       - uses: actions/checkout@v2
-      - name: Setup Node.js
-        uses: actions/setup-node@v1
+      - name: Configure committer
+        run: |
+          git config user.name "GitHub Actions Bot"
+          git config user.email "<>"
+      - name: Bump version
+        id: release
+        uses: ltv/standard-version-action@v2
         with:
-          node-version: '20.8.1'
-      - name: Install dependencies
-        run: npm install
-      - name: Configure Git
-        run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-      - name: Run standard-version
-        run: npx standard-version
-      - name: Push changes
-        run: |
-          git push --follow-tags origin main
-        env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          releaseAs: 'minor'
   deploy:
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
