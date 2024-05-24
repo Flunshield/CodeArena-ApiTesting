@@ -8,18 +8,28 @@ on:
       - '*'
 
 jobs:
-  changelog:
+  release:
     runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-      - name: Generate changelog
-        id: changelog
-        uses: release-drafter/release-drafter@v5
+      - uses: actions/checkout@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v1
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-      - name: Get the output time
-        run: echo "The time was ${{ steps.changelog.outputs.time }}"
+          node-version: '20.8.1'
+      - name: Install dependencies
+        run: npm install
+      - name: Configure Git
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+      - name: Run standard-version
+        run: npx standard-version
+      - name: Push changes
+        run: |
+          git push --follow-tags origin main
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
   deploy:
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
