@@ -28,7 +28,7 @@ jobs:
       - name: Push changes
         run: |
           git push --follow-tags origin main
-        env:
+        with:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
   deploy:
     runs-on: ubuntu-latest
