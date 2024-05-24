@@ -17,7 +17,6 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: '20.8.1'
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
       - name: Install dependencies
         run: npm install
       - name: Configure Git
@@ -29,6 +28,8 @@ jobs:
       - name: Push changes
         run: |
           git push --follow-tags origin main
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
   deploy:
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
