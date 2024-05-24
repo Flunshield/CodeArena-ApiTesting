@@ -8,6 +8,18 @@ on:
       - '*'
 
 jobs:
+  changelog:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Generate changelog
+        id: changelog
+        uses: release-drafter/release-drafter@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Get the output time
+        run: echo "The time was ${{ steps.changelog.outputs.time }}"
   deploy:
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
