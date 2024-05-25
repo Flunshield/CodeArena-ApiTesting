@@ -31,11 +31,23 @@ jobs:
       - name: Run standard-version
         run: npx standard-version
 
-      - name: Push changes
+      - name: Push changes and tags
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           git push --follow-tags origin main
+          git push origin main --tags
+
+      - name: Create GitHub release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: $(git describe --tags --abbrev=0)
+          release_name: Release $(git describe --tags --abbrev=0)
+          body_path: ./CHANGELOG.md
+          draft: false
+          prerelease: false
   deploy:
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
