@@ -8,6 +8,6 @@ async function bootstrap() {
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
     credentials: true, // autoriser les cookies et les en-têtes d'autorisation
   });
-  await app.listen(3000);
+  await app.listen(3002);
 }
 bootstrap();

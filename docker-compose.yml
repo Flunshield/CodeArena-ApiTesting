@@ -1,15 +1,20 @@
 services:
   app:
-    build: .
-    container_name: testingJs
+    image: flusnhield/api-testcodearena:latest
+    container_name: codearenatest
     ports:
-      - '3001:3000'
-    environment:
-      - LETSENCRYPT_HOST=${LETSENCRYPT_HOST}
-      - LETSENCRYPT_EMAIL=${LETSENCRYPT_EMAIL}
-      - VIRTUAL_HOST=${VIRTUAL_HOST}
+      - '3002:3002'
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.codearenatest.rule=Host(`codearenatest.jbertrand.fr`)"
+      - "traefik.http.routers.codearenatest.entrypoints=websecure"
+      - "traefik.http.routers.codearenatest.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.codearenatest.service=codearenatest"
+      - "traefik.http.services.codearenatest.loadbalancer.server.port=3002"
+      - "traefik.docker.network=traefik_proxy"
+    networks:
+      - traefik_proxy
 
 networks:
-  default:
-      name: nginx-proxy
-      external: true
+  traefik_proxy:
+    external: true
